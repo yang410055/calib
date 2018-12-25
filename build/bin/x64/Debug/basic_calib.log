@@ -1,0 +1,10 @@
+﻿cl : 命令行 warning D9002: 忽略未知选项“-O0”
+cl : 命令行 warning D9002: 忽略未知选项“-g”
+  main.cpp
+c:\program files (x86)\microsoft visual studio\2017\community\vc\tools\msvc\14.16.27023\include\xlocale(319): warning C4530: 使用了 C++ 异常处理程序，但未启用展开语义。请指定 /EHsc
+d:\program files\opencv\opencv\build\include\opencv2\core\mat.hpp(2585): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\program files\opencv\opencv\build\include\opencv2\core\persistence.hpp : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\program files\opencv\opencv\build\include\opencv2\core\utility.hpp : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\program files\opencv\opencv\build\include\opencv2\core\utility.hpp : warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+d:\program files\opencv\opencv\build\include\opencv2\imgproc.hpp(591): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+  basic_calib.vcxproj -> F:\WORK\Project\Calibration\Basic_Calib\build\x64\Debug\basic_calib.exe
