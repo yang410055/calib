@@ -29,9 +29,20 @@ list( APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake_modules )
 find_package(OpenCV REQUIRED)
 
 include_directories(${OpenCV_INCLUDE_DIRS})
-message(${OpenCV_INCLUDE_DIRS})
+message(${OpenCV_INCLUDE_DIRS}********)
+
+include_directories(${PROJECT_SOURCE_DIR}/src)   #####存放了自己生成库的头文件
+
 ######link_directories()
 ######target_link_libraries(opencv_config ${Opencv_libraries})
+
+#######生成自己的一些库
+#add_library(BALProblem SHARED ${PROJECT_SOURCE_DIR}/common/BALProblem.cpp)
+####message(${PROJECT_SOURCE_DIR}/src)
+####add_library(ComputeHomograph STATIC ${PROJECT_SOURCE_DIR}/src/computeHomograph.cpp)
+###add_library(ComputeHomograph STATIC ${PROJECT_SOURCE_DIR}/src/computeHomograph.cpp)
+###message("test%%%%%%%%%%%%%%%%%%%%")
+
 
 #add_executable(opencv_config ${SRC_LIST})
 add_subdirectory(src bin)

@@ -12,4 +12,9 @@ using namespace std;
 
 
 //计算图像序列的单应性矩阵
-int computeH(vector< vector< cv::Point3f > > &obj_points, vector< vector<cv::Point2f> >, vector<cv::Mat H> H_set );
+int computeH(vector< vector< cv::Point3f > > obj_points, vector< vector<cv::Point2f> >, int num_img, vector<cv::Mat> &H_set );
+
+
+
+
+#endif

@@ -7,6 +7,10 @@ using namespace std;
 #include <opencv2/calib3d/calib3d.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 
+#include "computeHomograph.h"
+#include "computeV.h"
+
+
 
 cv::Mat img_temp;    
 
@@ -104,7 +108,7 @@ int main(int argc, char **argv)
 
 	board_width = 9;   // first valuation is 6
 	board_height = 6;  // first valuation is 9
-	num_img = 2;
+	num_img = 10;
 	square_size = 20;
 	img_directory = "calib_imgs/1/";
 	img_filename = "left";
@@ -142,8 +146,30 @@ int main(int argc, char **argv)
 
 	std::cout << "calibration done" << std::endl;
 
+
+	
+	//%%%%%%%%%%%%%%计算图像序列的单应性矩阵
+	vector<cv::Mat> H_set;
+	int num_img1 = num_img;
+
+	computeH(obj_points, img_points, num_img, H_set);
+	for (int i = 0; i < 10; i++)
+	{
+		cout << i << endl;
+		cout << H_set[i] << endl;
+	}
+
+
+	//%%%%%%%%%%%%%%%%%%计算整个图像序列的V矩阵
+	cv::Mat V  = cv::Mat::zeros(H_set.size(), 6, CV_32FC1);
+
+	computeV(H_set,V);
+
+
 	
 
+
+	system("pause");
 	cout << "this is end" << endl;
 
 
