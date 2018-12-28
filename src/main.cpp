@@ -165,8 +165,12 @@ int main(int argc, char **argv)
 
 	computeV(H_set,V);
 
-
+	cout << V << endl;
 	
+	////%%%%%%%%%%%%%%%%%%% ¼ÆËãbÏòÁ¿
+
+	cv::Mat B = cv::Mat::zeros(3,3, CV_32FC1);
+	computeB(V, B);
 
 
 	system("pause");

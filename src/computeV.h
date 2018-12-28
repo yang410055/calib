@@ -4,7 +4,11 @@
 
 #include <iostream>
 #include <stdio.h>
+#include <math.h>
 using namespace std;
+
+
+
 #include <opencv2/core/core.hpp>
 #include <opencv2/calib3d/calib3d.hpp>
 
@@ -13,7 +17,11 @@ using namespace std;
 //计算张正友论文中的V矩阵
 int computeV(vector<cv::Mat> &H_set, cv::Mat &V);
 
+//计算含内参矩阵B
+int computeB(cv::Mat V, cv::Mat B);
 
+//计算内参矩阵A
+int computeA(cv::Mat B, cv::Mat A);
 
 
 #endif
