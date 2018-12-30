@@ -172,6 +172,22 @@ int main(int argc, char **argv)
 	cv::Mat B = cv::Mat::zeros(3,3, CV_32FC1);
 	computeB(V, B);
 
+	//std::cout << "B:" << B << endl;
+
+	////%%%%%%%%%%%%%%    计算内参矩阵A
+	cv::Mat A = cv::Mat::zeros(3,3, CV_32FC1);
+	computeA(B,A);
+	std::cout << A << endl;
+
+	//////%%%%%%%%%%%%  计算外参
+
+	float namuda = 1;
+
+
+	vector<cv::Mat> R_set;
+	vector<cv::Mat> t_set;
+	computeR_t(namuda, A, H_set, R_set, t_set);
+
 
 	system("pause");
 	cout << "this is end" << endl;

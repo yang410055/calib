@@ -71,7 +71,7 @@ cv::Mat computeSmallv( cv::Mat H, int i, int j )
 
 
 //计算含内参矩阵B
-int computeB(cv::Mat V, cv::Mat B)
+int computeB(cv::Mat V, cv::Mat &B)
 {
 	int num = V.rows;
 
@@ -89,14 +89,96 @@ int computeB(cv::Mat V, cv::Mat B)
 	B = (cv::Mat_<float>(3, 3) << b.at<float>(1-1,0), b.at<float>(2-1,0), b.at<float>(4-1,0), b.at<float>(2-1,0),b.at<float>(3-1,0),\
 		b.at<float>(5-1), b.at<float>(4-1), b.at<float>(5-1), b.at<float>(6-1) );
 
-	std::cout << B << endl;
+	//std::cout << B << endl;
 	return 1;
 
 }
 
 
 ////计算内参矩阵A
-int computeA(cv::Mat B, cv::Mat A)
+int computeA(cv::Mat B, cv::Mat &A)
 {
+	float v0 = (B.at<float>(1-1,2-1)*B.at<float>(1-1,3-1)-B.at<float>(1-1,1-1)*B.at<float>(2-1,3-1))/  \
+		( B.at<float>(1-1,1-1)*B.at<float>(2-1,2-1)-B.at<float>(1-1,2-1)*B.at<float>(1-1,2-1) );
+	float namuda = B.at<float>(3-1,3-1)-( B.at<float>(1-1,3-1)*B.at<float>(1-1,3-1) + \
+		v0*( B.at<float>(1-1,2-1)*B.at<float>(1-1,3-1)-B.at<float>(1-1,1-1)*B.at<float>(2-1,3-1) ) )/B.at<float>(1-1,1-1) ;
+	float fx = sqrt(namuda/B.at<float>(1-1,1-1));
+	float fy = sqrt( namuda*B.at<float>(1-1,1-1)/( B.at<float>(1-1,1-1)*B.at<float>(2-1,2-1)-B.at<float>(1-1,2-1)*B.at<float>(1-1,2-1) ) );
+	float gama = (-1)*B.at<float>(1 - 1, 2 - 1)*fx*fx*fy / namuda;
+	float u0 = gama * v0 / fy - B.at<float>(1 - 1, 3 - 1)*fx*fx / namuda;   ////////////gama*v0/fx
 
+	A = (cv::Mat_<float>(3,3)<<fx,gama,u0,0,fy,v0,0,0,1 );
+
+
+	//std::cout << "B:" << B << endl;
+	//std::cout << "v0:"<<v0 << endl;
+	//std::cout << "namuda:" << namuda << endl;
+	//std::cout << "fx:" << fx << endl;
+	//std::cout << "fy:" << fy << endl;
+	//std::cout << "gama:" << gama << endl;
+	//std::cout << "u0:" << u0 << endl;
+
+	return 1;
+}
+
+
+////%%%%%%%%%%%%%计算外参
+int computeR_t(float namuda, cv::Mat A, vector<cv::Mat>H_set, vector<cv::Mat>&R_set, vector<cv::Mat>&t_set)
+{
+	int num_H = H_set.size();
+
+	cv::Mat H_single;
+	cv::Mat h1,h2,h3;
+
+	for (int i = 0; i < num_H; i++)
+	{
+		H_single = H_set[i];
+		//std::cout << "H_single type:" << H_single.type() << endl;
+		//H_single.convertTo(H_single, CV_32FC1);
+
+		h1 = 0 + H_single.col(0);  
+		h2 = 0 + H_single.col(1);
+		h3 = 0 + H_single.col(2);
+		std::cout << "h1 type:" << h1.type() << endl;
+		h1.convertTo(h1, CV_32FC1);
+		h2.convertTo(h2, CV_32FC1);
+		h3.convertTo(h3, CV_32FC1);
+		std::cout << h1 << endl;
+		std::cout << h2 << endl;
+		std::cout << h3 << endl;
+
+		//std::cout << "A:" << A << endl;
+		//std::cout << A.inv() << endl;
+
+
+		//cv::Mat tt = A.inv()*h1;
+		//std::cout <<"tt:"<<tt << endl;
+        //A.convertTo(A, CV_64FC1);
+		//std::cout << A.type() << endl;
+		//////要保持Mat元素类型一致，不然矩阵计算时会出错，double和float都要转变为一样
+
+		cv::Mat R_single = cv::Mat::zeros(3,3,CV_32FC1);
+		cv::Mat t_single = cv::Mat::zeros(3,1,CV_32FC1);
+
+		float lambda1 = 1 / norm(A.inv()*h1);
+		float lambda2 = 1 / norm(A.inv()*h2);
+
+		R_single.col(0) = 0 + lambda1*A.inv()*h1;
+		R_single.col(1) = 0 + lambda1 * A.inv()*h2;
+		R_single.col(2) = 0 + R_single.col(0).cross(R_single.col(1));
+
+		t_single = 0 + lambda1 * A.inv()*h3;
+
+		R_set.push_back(R_single);
+		t_set.push_back(t_single);
+
+		//std::cout << "R:" << R_single << endl;
+		//std::cout << "t:" << t_single << endl;
+
+		
+
+	}
+
+
+	return 1;
 }
