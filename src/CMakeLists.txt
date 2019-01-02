@@ -2,6 +2,8 @@
 set(SRC_LIST ${PROJECT_SOURCE_DIR}/src/main.cpp
     ${PROJECT_SOURCE_DIR}/src/computeHomograph.cpp
 	${PROJECT_SOURCE_DIR}/src/computeV.cpp
+	${PROJECT_SOURCE_DIR}/src/compute2cameraRt.cpp
+	${PROJECT_SOURCE_DIR}/src/Refine.cpp
 	  )
 	  
 message(${SRC_LIST})

@@ -111,19 +111,19 @@ int computeA(cv::Mat B, cv::Mat &A)
 
 
 	//std::cout << "B:" << B << endl;
-	//std::cout << "v0:"<<v0 << endl;
-	//std::cout << "namuda:" << namuda << endl;
-	//std::cout << "fx:" << fx << endl;
-	//std::cout << "fy:" << fy << endl;
-	//std::cout << "gama:" << gama << endl;
-	//std::cout << "u0:" << u0 << endl;
+	std::cout << "v0:"<<v0 << endl;
+	std::cout << "namuda:" << namuda << endl;
+	std::cout << "fx:" << fx << endl;
+	std::cout << "fy:" << fy << endl;
+	std::cout << "gama:" << gama << endl;
+	std::cout << "u0:" << u0 << endl;
 
 	return 1;
 }
 
 
 ////%%%%%%%%%%%%%¼ÆËãÍâ²Î
-int computeR_t(float namuda, cv::Mat A, vector<cv::Mat>H_set, vector<cv::Mat>&R_set, vector<cv::Mat>&t_set)
+int computeR_t( cv::Mat A, vector<cv::Mat>H_set, vector<cv::Mat>&R_set, vector<cv::Mat>&t_set)
 {
 	int num_H = H_set.size();
 
@@ -139,13 +139,13 @@ int computeR_t(float namuda, cv::Mat A, vector<cv::Mat>H_set, vector<cv::Mat>&R_
 		h1 = 0 + H_single.col(0);  
 		h2 = 0 + H_single.col(1);
 		h3 = 0 + H_single.col(2);
-		std::cout << "h1 type:" << h1.type() << endl;
+		//std::cout << "h1 type:" << h1.type() << endl;
 		h1.convertTo(h1, CV_32FC1);
 		h2.convertTo(h2, CV_32FC1);
 		h3.convertTo(h3, CV_32FC1);
-		std::cout << h1 << endl;
-		std::cout << h2 << endl;
-		std::cout << h3 << endl;
+		//std::cout << h1 << endl;
+		//std::cout << h2 << endl;
+		//std::cout << h3 << endl;
 
 		//std::cout << "A:" << A << endl;
 		//std::cout << A.inv() << endl;

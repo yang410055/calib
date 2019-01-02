@@ -24,7 +24,7 @@ int computeB(cv::Mat V, cv::Mat &B);
 int computeA(cv::Mat B, cv::Mat &A);
 
 //º∆À„Õ‚≤Œ
-int computeR_t( float namuda, cv::Mat A, vector<cv::Mat>H_set, vector<cv::Mat>&R_set, vector<cv::Mat>&t_set  );
+int computeR_t( cv::Mat A, vector<cv::Mat>H_set, vector<cv::Mat>&R_set, vector<cv::Mat>&t_set  );
 
 
 #endif

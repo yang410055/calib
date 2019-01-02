@@ -9,6 +9,8 @@ using namespace std;
 
 #include "computeHomograph.h"
 #include "computeV.h"
+#include "compute2cameraRt.h"
+#include "Refine.h"
 
 
 
@@ -116,6 +118,35 @@ int main(int argc, char **argv)
 
 	outfile = "result";
 
+	//%%%%%%%%%%%%%%%%%%%第二个相机
+	vector< vector< cv::Point3f > > obj_points2;
+	vector< vector< cv::Point2f > > img_points2;
+	char *img_directory2 = "calib_imgs/2/";
+	char *img_filename2 = "right";
+	find_chess_corners(board_width, board_height, num_img, square_size,
+		img_directory2, img_filename2, extension,
+		obj_points2, img_points2);
+
+	vector<cv::Mat> H_set2;
+	int num_img2 = num_img;
+	computeH(obj_points2, img_points2, num_img2, H_set2);
+
+	cv::Mat V2 = cv::Mat::zeros(H_set2.size(), 6, CV_32FC1);
+	computeV(H_set2, V2);
+
+	cv::Mat B2 = cv::Mat::zeros(3, 3, CV_32FC1);
+	computeB(V2, B2);
+
+	cv::Mat A2 = cv::Mat::zeros(3, 3, CV_32FC1);
+	computeA(B2, A2);
+
+	vector<cv::Mat> R_set2;
+	vector<cv::Mat> t_set2;
+	computeR_t(A2, H_set2, R_set2, t_set2);
+
+
+	//%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 	find_chess_corners( board_width, board_height, num_img, square_size,
 		img_directory,  img_filename, extension,
@@ -153,11 +184,11 @@ int main(int argc, char **argv)
 	int num_img1 = num_img;
 
 	computeH(obj_points, img_points, num_img, H_set);
-	for (int i = 0; i < 10; i++)
-	{
-		cout << i << endl;
-		cout << H_set[i] << endl;
-	}
+	//for (int i = 0; i < 10; i++)
+	//{
+	//	cout << i << endl;
+	//	cout << H_set[i] << endl;
+	//}
 
 
 	//%%%%%%%%%%%%%%%%%%计算整个图像序列的V矩阵
@@ -165,7 +196,7 @@ int main(int argc, char **argv)
 
 	computeV(H_set,V);
 
-	cout << V << endl;
+	//cout <<"V:"<< V << endl;
 	
 	////%%%%%%%%%%%%%%%%%%% 计算b向量
 
@@ -177,21 +208,27 @@ int main(int argc, char **argv)
 	////%%%%%%%%%%%%%%    计算内参矩阵A
 	cv::Mat A = cv::Mat::zeros(3,3, CV_32FC1);
 	computeA(B,A);
-	std::cout << A << endl;
+	//std::cout << "A:"<< A << endl;
 
 	//////%%%%%%%%%%%%  计算外参
 
-	float namuda = 1;
-
+	
 
 	vector<cv::Mat> R_set;
 	vector<cv::Mat> t_set;
-	computeR_t(namuda, A, H_set, R_set, t_set);
+	computeR_t( A, H_set, R_set, t_set);
+
+
+	cv::Mat R_init;
+	cv::Mat t_init;
+	compute_2camera_R_t(R_set, t_set, R_set2, t_set2, R_init, t_init);
+
+
 
 
 	system("pause");
 	cout << "this is end" << endl;
 
-
+	
 
 }
