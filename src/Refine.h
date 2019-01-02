@@ -15,4 +15,8 @@ using namespace std;
 
 
 
+int projective2D(cv::Mat A, cv::Mat R, cv::Mat t, vector<cv::Point3f> single_obj_points, vector<cv::Point2f> &reprojective_points);
+
+
+
 #endif

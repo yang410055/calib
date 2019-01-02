@@ -173,7 +173,7 @@ int computeR_t( cv::Mat A, vector<cv::Mat>H_set, vector<cv::Mat>&R_set, vector<c
 		t_set.push_back(t_single);
 
 		//std::cout << "R:" << R_single << endl;
-		//std::cout << "t:" << t_single << endl;
+		std::cout << "t:" << t_single << endl;
 
 		
 

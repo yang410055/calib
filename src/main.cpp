@@ -219,11 +219,22 @@ int main(int argc, char **argv)
 	computeR_t( A, H_set, R_set, t_set);
 
 
+
+
+	/////%%%%%%计算两个相机旋转平移初值
 	cv::Mat R_init;
 	cv::Mat t_init;
 	compute_2camera_R_t(R_set, t_set, R_set2, t_set2, R_init, t_init);
 
 
+
+	//////计算重投影
+
+	vector<cv::Point2f> reprojective_points;
+	projective2D(A, R_set[0], t_set[0], obj_points[0], reprojective_points);
+
+	cout << "reprojective points:" << reprojective_points << endl;
+		
 
 
 	system("pause");
