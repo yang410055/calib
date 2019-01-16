@@ -15,12 +15,14 @@ using namespace std;
 
 
 cv::Mat img_temp;    
+//vector<pair<int, int>> w_h;   //以前定义为全局的，每个相机产生可能不一样分辨率，还是单独放在找角点的程序中，作为一个输出量
 
 //////找到图像序列的角点，把图像序列的角点存储到img_points中，排列的尺寸存储到obj_points中
 void find_chess_corners(int board_width, int board_height, int num_img, float square_size,
 	char* img_directory, char* img_filename, char* extension,
 	vector< vector< cv::Point3f > > &obj_points,
-	vector< vector< cv::Point2f > > &img_points) {
+	vector< vector< cv::Point2f > > &img_points,
+	vector <pair<int, int>>&w_h ) {
 
 	cv::Size board_size = cv::Size(board_width, board_height);
 	for (int k = 1; k <= num_img; k++)
@@ -29,6 +31,7 @@ void find_chess_corners(int board_width, int board_height, int num_img, float sq
 		sprintf(img_file, "%s%s%d%s", img_directory, img_filename, k, extension);
 		
 		img_temp = cv::imread(img_file, CV_LOAD_IMAGE_COLOR);  //把它定义为全局的，后面再主函数中还会用到img_temp
+		w_h.push_back(pair<int,int>(img_temp.cols, img_temp.rows  ));
 
 		cv::Mat gray_temp;
 		cv::cvtColor(img_temp, gray_temp, CV_BGR2GRAY);
@@ -123,9 +126,11 @@ int main(int argc, char **argv)
 	vector< vector< cv::Point2f > > img_points2;
 	char *img_directory2 = "calib_imgs/2/";
 	char *img_filename2 = "right";
+
+	vector<pair<int, int>> w_h2;
 	find_chess_corners(board_width, board_height, num_img, square_size,
 		img_directory2, img_filename2, extension,
-		obj_points2, img_points2);
+		obj_points2, img_points2, w_h2);
 
 	vector<cv::Mat> H_set2;
 	int num_img2 = num_img;
@@ -148,9 +153,10 @@ int main(int argc, char **argv)
 	//%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
+	vector<pair<int, int>> w_h;
 	find_chess_corners( board_width, board_height, num_img, square_size,
 		img_directory,  img_filename, extension,
-		 obj_points, img_points );
+		 obj_points, img_points, w_h );
 
 
 	std::cout << "starting calibration" << endl;
@@ -212,12 +218,10 @@ int main(int argc, char **argv)
 
 	//////%%%%%%%%%%%%  计算外参
 
-	
 
 	vector<cv::Mat> R_set;
 	vector<cv::Mat> t_set;
 	computeR_t( A, H_set, R_set, t_set);
-
 
 
 
@@ -234,7 +238,45 @@ int main(int argc, char **argv)
 	projective2D(A, R_set[0], t_set[0], obj_points[0], reprojective_points);
 
 	cout << "reprojective points:" << reprojective_points << endl;
-		
+	cout << "--------------------------" << endl;
+
+
+
+	cv::Mat k;
+	computeInitDistortion(img_points, obj_points,
+		A, R_set, t_set, w_h, k);
+
+	cout << "intial k:"<<k << endl;
+
+	cv::Mat k2;
+	computeInitDistortion(img_points2, obj_points2,
+		A, R_set2, t_set2, w_h2, k2);
+
+	cout << "intial k2:" << k2 << endl;
+
+
+
+	cv::Point3f single_obj_points_every;
+	single_obj_points_every = (obj_points[0])[0];
+
+
+	cout << "single point reproject x real:" << img_points[0][0].x << endl;
+	cout << "single point reproject y real:" << img_points[0][0].y << endl;
+
+	cout << "single point reproject x without Distortion parameter:" << reprojective_points[0].x << endl;
+	cout << "single point reproject y without Distortion parameter:" << reprojective_points[0].y << endl;
+
+	cout <<"single point reproject x:" << Funcx(single_obj_points_every, A, R_set[0], t_set[0], k, w_h[0].first, w_h[0].second) << endl;
+	//cv::Mat t1 = t_set[0].clone();
+	//t1.at<float>(0, 0) = 0.001 + t1.at<float>(0, 0);
+	//cout << "t1-t:" << t1 - t_set[0] << endl;
+	//cout << "single point reproject x:" << Funcx(single_obj_points_every, A, R_set[0], t1, k, w_h[0].first, w_h[0].second) << endl;
+	cout << "single point reproject y:" << Funcy(single_obj_points_every, A, R_set[0], t_set[0], k, w_h[0].first, w_h[0].second) << endl;
+
+	cout<<"Deriv:"<<
+	Deriv(Funcx, single_obj_points_every, A, R_set[0], t_set[0], k, w_h[0].first, w_h[0].second, 15);  //14
+
+
 
 
 	system("pause");
