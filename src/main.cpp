@@ -175,6 +175,10 @@ int main(int argc, char **argv)
 	fs << "K" << K;
 	fs << "D" << D;
 
+	cout << "K:" << K << endl;
+	cout << "D:" << D << endl;
+	cout << "D type:" << D.type() << endl;
+
 	std::cout << t_vec[0] << endl;
 	std::cout << t_vec[1] << endl;
 
@@ -183,6 +187,42 @@ int main(int argc, char **argv)
 
 	std::cout << "calibration done" << std::endl;
 
+
+	cv::Mat k9 = cv::Mat::zeros(2,1,CV_32FC1);
+	k9.at<float>(0, 0) = float(D.at<double>(0,0));
+	k9.at<float>(1, 0) = float(D.at<double>(0,1));
+
+	//带opencv畸变的高阶项
+	D.convertTo(D,CV_32FC1);
+	cv::Mat D1;
+	cv::transpose(D,D1);
+
+	vector<cv::Mat> t_v;
+	for (int i = 0; i < t_vec.size(); i++)
+	{
+		t_vec[i].convertTo(t_vec[i], CV_32FC1);
+		t_vec[i] = cv::Mat(t_vec[i]);
+		t_v.push_back(t_vec[i]);
+	}
+
+	vector<cv::Mat> RRmat_set;
+	cv::Mat RRmat = cv::Mat::zeros(3,3,CV_32FC1);
+	for (int i = 0; i < R_mat.size();i++)
+	{
+		cv::Rodrigues(R_mat[i],RRmat);
+		RRmat.convertTo(RRmat,CV_32FC1 );
+		RRmat_set.push_back(RRmat);
+	}
+
+
+	K.convertTo(K, CV_32FC1);
+
+	//cout << D1 << endl;
+	//%%%%%%%%%%%%%%%%%%%%%%%%%用opencv计算的值来计算投影误差
+	cout << "mean_Reprojective_Error:" << endl;
+	cout << computeReprojectionErrors(obj_points,
+		img_points,
+		K, RRmat_set, t_v, D1, w_h) << endl;
 
 	
 	//%%%%%%%%%%%%%%计算图像序列的单应性矩阵
@@ -243,7 +283,7 @@ int main(int argc, char **argv)
 
 
 	cv::Mat k;
-	computeInitDistortion(img_points, obj_points,
+	computeInitDistortion1(img_points, obj_points,
 		A, R_set, t_set, w_h, k);
 
 	cout << "intial k:"<<k << endl;
@@ -275,7 +315,28 @@ int main(int argc, char **argv)
 
 	cout<<"Deriv:"<<
 	Deriv(Funcx, single_obj_points_every, A, R_set[0], t_set[0], k, w_h[0].first, w_h[0].second, 15);  //14
+	cout << endl;
 
+
+	//cout << "k:" << k << endl;
+
+	cout << "mean_Reprojective_Error:" << endl;
+	cout<< computeReprojectionErrors(obj_points,
+		img_points,
+		A, R_set, t_set, k, w_h)<<endl;
+
+	cout << "non linear:" << endl;
+
+	int MAX_ITER = 1000;
+	LM(Func4x,Func4y, obj_points, img_points,  A, R_set,  t_set, k, w_h, MAX_ITER);
+
+	//cout << "k" << k << endl;
+
+	cout << "mean_Reprojective_Error:" << endl;
+	cout<<computeReprojectionErrors(obj_points,
+		img_points,
+		A, R_set, t_set, k, w_h)<<endl;
+	cout << "A:" << A << endl;
 
 
 

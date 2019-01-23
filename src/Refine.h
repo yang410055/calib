@@ -20,16 +20,39 @@ int normalizePoints(vector<cv::Point2f> single_img_points, vector< cv::Point2f >
 
 int computeInitDistortion(vector< vector< cv::Point2f > > img_points, vector< vector< cv::Point3f > >obj_points,
 	cv::Mat A, vector<cv::Mat> R_set, vector<cv::Mat> t_set, vector<pair<int, int>>w_h , cv::Mat &k );
+int computeInitDistortion1(vector< vector< cv::Point2f > > img_points, vector< vector< cv::Point3f > >obj_points,
+	cv::Mat A, vector<cv::Mat> R_set, vector<cv::Mat> t_set, vector<pair<int, int>>w_h, cv::Mat &k);
 
 
 
 float Funcx(const cv::Point3f &single_obj_points_every , cv::Mat A, const cv::Mat &R, const cv::Mat &t, const cv::Mat &k, int w, int h);
+float Funcxx(const cv::Point3f &single_obj_points_every, cv::Mat A, const cv::Mat &R, const cv::Mat &t, const cv::Mat &k, int w, int h);
+
+float Func4x(const cv::Point3f &single_obj_points_every, cv::Mat A, const cv::Mat &R, const cv::Mat &t, const cv::Mat &k, int w, int h);
+
 float Funcy(const cv::Point3f &single_obj_points_every, cv::Mat A, const cv::Mat &R, const cv::Mat &t, const cv::Mat &k, int w, int h);
+float Funcyy(const cv::Point3f &single_obj_points_every, cv::Mat A, const cv::Mat &R, const cv::Mat &t, const cv::Mat &k, int w, int h);
+
+float Func4y(const cv::Point3f &single_obj_points_every, cv::Mat A, const cv::Mat &R, const cv::Mat &t, const cv::Mat &k, int w, int h);
 
 float Deriv(float(*Func)(const cv::Point3f &single_obj_points_every, cv::Mat A, \
 	const cv::Mat &R, const cv::Mat &t, const cv::Mat &k, int w, int h), \
 	const cv::Point3f &single_obj_points_every, \
 	cv::Mat A, cv::Mat R, cv::Mat t, cv::Mat k,int w, int h, int n);
+
+void LM(float(*Funcx)(const cv::Point3f &single_obj_points_every, cv::Mat A, \
+	const cv::Mat &R, const cv::Mat &t, const cv::Mat &k, int w, int h), \
+	float(*Funcy)(const cv::Point3f &single_obj_points_every, cv::Mat A, \
+		const cv::Mat &R, const cv::Mat &t, const cv::Mat &k, int w, int h), \
+	const vector<vector<cv::Point3f>> &obj_points, \
+	const vector<vector<cv::Point2f>> &img_points, \
+	cv::Mat A, vector<cv::Mat> R_set, vector<cv::Mat> t_set, cv::Mat k, vector<pair<int, int>> w_h,
+	int MAX_ITER);
+
+
+float computeReprojectionErrors(const vector<vector<cv::Point3f>> &obj_points,
+	const vector<vector<cv::Point2f>> &img_points,
+	cv::Mat A, vector<cv::Mat> R_set, vector<cv::Mat> t_set, cv::Mat k, vector<pair<int, int>> w_h);
 
 
 #endif
