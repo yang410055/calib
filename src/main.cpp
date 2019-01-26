@@ -12,6 +12,7 @@ using namespace std;
 #include "compute2cameraRt.h"
 #include "Refine.h"
 
+#include "ceres_refine.h"
 
 
 cv::Mat img_temp;    
@@ -337,6 +338,7 @@ int main(int argc, char **argv)
 		img_points,
 		A, R_set, t_set, k, w_h)<<endl;
 	cout << "A:" << A << endl;
+
 
 
 
