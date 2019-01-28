@@ -271,8 +271,6 @@ int main(int argc, char **argv)
 	cv::Mat t_init;
 	compute_2camera_R_t(R_set, t_set, R_set2, t_set2, R_init, t_init);
 
-
-
 	//////计算重投影
 
 	vector<cv::Point2f> reprojective_points;
@@ -280,7 +278,6 @@ int main(int argc, char **argv)
 
 	cout << "reprojective points:" << reprojective_points << endl;
 	cout << "--------------------------" << endl;
-
 
 
 	cv::Mat k;
@@ -296,7 +293,6 @@ int main(int argc, char **argv)
 	cout << "intial k2:" << k2 << endl;
 
 
-
 	cv::Point3f single_obj_points_every;
 	single_obj_points_every = (obj_points[0])[0];
 
@@ -307,16 +303,20 @@ int main(int argc, char **argv)
 	cout << "single point reproject x without Distortion parameter:" << reprojective_points[0].x << endl;
 	cout << "single point reproject y without Distortion parameter:" << reprojective_points[0].y << endl;
 
+
 	cout <<"single point reproject x:" << Funcx(single_obj_points_every, A, R_set[0], t_set[0], k, w_h[0].first, w_h[0].second) << endl;
+
 	//cv::Mat t1 = t_set[0].clone();
 	//t1.at<float>(0, 0) = 0.001 + t1.at<float>(0, 0);
 	//cout << "t1-t:" << t1 - t_set[0] << endl;
 	//cout << "single point reproject x:" << Funcx(single_obj_points_every, A, R_set[0], t1, k, w_h[0].first, w_h[0].second) << endl;
 	cout << "single point reproject y:" << Funcy(single_obj_points_every, A, R_set[0], t_set[0], k, w_h[0].first, w_h[0].second) << endl;
 
+
 	cout<<"Deriv:"<<
 	Deriv(Funcx, single_obj_points_every, A, R_set[0], t_set[0], k, w_h[0].first, w_h[0].second, 15);  //14
 	cout << endl;
+
 
 
 	//cout << "k:" << k << endl;
@@ -329,8 +329,19 @@ int main(int argc, char **argv)
 	cout << "non linear:" << endl;
 
 	int MAX_ITER = 1000;
-	LM(Func4x,Func4y, obj_points, img_points,  A, R_set,  t_set, k, w_h, MAX_ITER);
+	//LM(Func4x,Func4y, obj_points, img_points,  A, R_set,  t_set, k, w_h, MAX_ITER);
 
+
+	//%%%%%%之前R_set在函数中被修改了。。。。。。。。。。。
+	//for (int i = 0; i < R_set.size(); i++)
+	//{
+	//	cout << R_set[i] << endl;
+	//}
+
+	ceres_nonlinear_op(obj_points, \
+		img_points, \
+		A, R_set, t_set, k, w_h,
+		MAX_ITER);
 	//cout << "k" << k << endl;
 
 	cout << "mean_Reprojective_Error:" << endl;
@@ -338,6 +349,16 @@ int main(int argc, char **argv)
 		img_points,
 		A, R_set, t_set, k, w_h)<<endl;
 	cout << "A:" << A << endl;
+
+
+
+
+
+
+
+
+
+
 
 
 

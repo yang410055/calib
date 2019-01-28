@@ -12,18 +12,19 @@ int projective2D(cv::Mat A, cv::Mat R, cv::Mat t, vector<cv::Point3f> single_obj
 		homo_single_obj_points.push_back(cv::Point3f( single_obj_points[i].x, single_obj_points[i].y, 1 ) );
 	}
 
-
+	cv::Mat R_c;
+	R.copyTo(R_c);
 
 	///// 求转换矩阵
-	R.col(2) = 0;
+	R_c.col(2) = 0;
 	//cout << "t:" << t << endl;
-	R.col(2) = 0 + t;
+	R_c.col(2) = 0 + t;
 	//cout << "R:" << R << endl;
 	//A.at<float>(0, 1) = 0;          ///////////////把倾斜因子设为0,从直观上看感觉不出来应该加或者不加
 	//cout << "A:" << A << endl;
 	//cout <<"A type:"<< A.type() << endl;
 
-	cv::Mat ARt = A * R;
+	cv::Mat ARt = A * R_c;
 	//cout <<"ARt:" <<ARt << endl;
 	
 
@@ -208,12 +209,17 @@ float Funcx(const cv::Point3f &single_obj_points_every, cv::Mat A, const cv::Mat
 	cv::Point3f homo_single_obj_points_every;
 	homo_single_obj_points_every = cv::Point3f(single_obj_points_every.x, single_obj_points_every.y, 1);
 	
+	cv::Mat R_c;
+	R.copyTo(R_c);
+
 	///// 求转换矩阵
-	R.col(2) = 0;
+	R_c.col(2) = 0;
 	//cout << "t:" << t << endl;
-	R.col(2) = 0 + t;
+	R_c.col(2) = 0 + t;
 	//A.at<float>(0, 1) = 0;          ///////////////把倾斜因子设为0,从直观上看感觉不出来应该加或者不加
-	cv::Mat ARt = A * R;
+
+
+	cv::Mat ARt = A * R_c;
 
 
 	
@@ -245,10 +251,13 @@ float Funcxx(const cv::Point3f &single_obj_points_every, cv::Mat A, const cv::Ma
 	cv::Point3f homo_single_obj_points_every;
 	homo_single_obj_points_every = cv::Point3f(single_obj_points_every.x, single_obj_points_every.y, 1);
 
-	R.col(2) = 0;
-	R.col(2) = 0 + t;
+	cv::Mat R_c;
+	R.copyTo(R_c);
 
-	cv::Mat p1 = R * cv::Mat(homo_single_obj_points_every);
+	R_c.col(2) = 0;
+	R_c.col(2) = 0 + t;
+
+	cv::Mat p1 = R_c * cv::Mat(homo_single_obj_points_every);
 	//cout << p1 << endl;
 	p1 /= p1.at<float>(2);
 	//cout << p1 << endl;
@@ -310,12 +319,15 @@ float Func4x(const cv::Point3f &single_obj_points_every, cv::Mat A, const cv::Ma
 	cv::Point3f homo_single_obj_points_every;
 	homo_single_obj_points_every = cv::Point3f(single_obj_points_every.x, single_obj_points_every.y, 1);
 
+	cv::Mat R_c;
+	R.copyTo(R_c);
+
 	///// 求转换矩阵
-	R.col(2) = 0;
+	R_c.col(2) = 0;
 	//cout << "t:" << t << endl;
-	R.col(2) = 0 + t;
+	R_c.col(2) = 0 + t;
 	//A.at<float>(0, 1) = 0;          ///////////////把倾斜因子设为0,从直观上看感觉不出来应该加或者不加
-	cv::Mat ARt = A * R;
+	cv::Mat ARt = A * R_c;
 
 
 	///////重投影
@@ -373,12 +385,15 @@ float Funcy(const cv::Point3f &single_obj_points_every, cv::Mat A, const cv::Mat
 	cv::Point3f homo_single_obj_points_every;
 	homo_single_obj_points_every = cv::Point3f(single_obj_points_every.x, single_obj_points_every.y, 1);
 
+	cv::Mat R_c;
+	R.copyTo(R_c);
+
 	///// 求转换矩阵
-	R.col(2) = 0;
+	R_c.col(2) = 0;
 	//cout << "t:" << t << endl;
-	R.col(2) = 0 + t;
+	R_c.col(2) = 0 + t;
 	//A.at<float>(0, 1) = 0;          ///////////////把倾斜因子设为0,从直观上看感觉不出来应该加或者不加
-	cv::Mat ARt = A * R;
+	cv::Mat ARt = A * R_c;
 
 
 
@@ -411,10 +426,13 @@ float Funcyy(const cv::Point3f &single_obj_points_every, cv::Mat A, const cv::Ma
 	cv::Point3f homo_single_obj_points_every;
 	homo_single_obj_points_every = cv::Point3f(single_obj_points_every.x, single_obj_points_every.y, 1);
 
-	R.col(2) = 0;
-	R.col(2) = 0 + t;
+	cv::Mat R_c;
+	R.copyTo(R_c);
 
-	cv::Mat p1 = R * cv::Mat(homo_single_obj_points_every);
+	R_c.col(2) = 0;
+	R_c.col(2) = 0 + t;
+
+	cv::Mat p1 = R_c * cv::Mat(homo_single_obj_points_every);
 	//cout << p1 << endl;
 	p1 /= p1.at<float>(2);
 	//cout << p1 << endl;
@@ -475,12 +493,16 @@ float Func4y(const cv::Point3f &single_obj_points_every, cv::Mat A, const cv::Ma
 	cv::Point3f homo_single_obj_points_every;
 	homo_single_obj_points_every = cv::Point3f(single_obj_points_every.x, single_obj_points_every.y, 1);
 
+
+	cv::Mat R_c;
+	R.copyTo(R_c);
+
 	///// 求转换矩阵
-	R.col(2) = 0;
+	R_c.col(2) = 0;
 	//cout << "t:" << t << endl;
-	R.col(2) = 0 + t;
+	R_c.col(2) = 0 + t;
 	//A.at<float>(0, 1) = 0;          ///////////////把倾斜因子设为0,从直观上看感觉不出来应该加或者不加
-	cv::Mat ARt = A * R;
+	cv::Mat ARt = A * R_c;
 
 
 	///////重投影
