@@ -48,7 +48,8 @@ int ceres_nonlinear_op(const vector<vector<cv::Point3f>> &obj_points, \
 	//params.at<float>(5 + num_img * num_t + num_img * num_R) = k.at<float>(0);
 	//params.at<float>(6 + num_img * num_t + num_img * num_R) = k.at<float>(1);
 
-
+	//cout << A << endl;
+	//cout << "original params:" << endl;
 	double params[67];
 	params[0] = A.at<float>(0, 0);  //fx
 	//cout << params[0] << endl;
@@ -75,11 +76,11 @@ int ceres_nonlinear_op(const vector<vector<cv::Point3f>> &obj_points, \
 	params[5 + num_img * num_t + num_img * num_R] = k.at<float>(0);
 	params[6 + num_img * num_t + num_img * num_R] = k.at<float>(1);
 
-	cout << *params << endl;
-	for (int i = 0; i < 67; i++)
-	{
-		cout << params[i] << endl;
-	}
+	//cout << *params << endl;
+	//for (int i = 0; i < 67; i++)
+	//{
+	//	cout << params[i] << endl;
+	//}
 
 
 	//%%%%%%%%%%%%%%Çó½â
@@ -104,12 +105,12 @@ int ceres_nonlinear_op(const vector<vector<cv::Point3f>> &obj_points, \
 				double(img_points[i][j].y),
 				i, num_img);
 			//
-			//problem.AddResidualBlock( new AutoDiffCostFunction<ProjectiveResidual,2,67>(p), NULL, &params );
+			problem.AddResidualBlock( new AutoDiffCostFunction<ProjectiveResidual,2,67>(p), NULL, params );
 
-			auto *pp = new AutoDiffCostFunction<ProjectiveResidual, 2, 67>(p);
+			//auto *pp = new AutoDiffCostFunction<ProjectiveResidual, 2, 67>(p);
 
 			
-			problem.AddResidualBlock(pp, NULL, params);
+			//problem.AddResidualBlock(pp, NULL, params);
 		}
 	
 	Solver::Options options;
@@ -121,6 +122,11 @@ int ceres_nonlinear_op(const vector<vector<cv::Point3f>> &obj_points, \
 	Solve(options, &problem, &summary);
 	//std::cout << summary.BriefReport() << "\n";
 	std::cout << "Final params: "  << "\n";
+	for (int i = 0; i < 67; i++)
+	{
+		cout << params[i] << endl;
+	}
+
 	std::cout << params << endl;
 			
 
