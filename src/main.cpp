@@ -281,7 +281,7 @@ int main(int argc, char **argv)
 
 
 	cv::Mat k;
-	computeInitDistortion1(img_points, obj_points,
+	computeInitDistortion(img_points, obj_points,
 		A, R_set, t_set, w_h, k);
 
 	cout << "intial k:"<<k << endl;
@@ -329,6 +329,10 @@ int main(int argc, char **argv)
 	cout << "non linear:" << endl;
 
 	int MAX_ITER = 1000;
+	ceres_nonlinear_op(obj_points, \
+		img_points, \
+		A, R_set, t_set, k, w_h, \
+		MAX_ITER);
 	//LM(Func4x,Func4y, obj_points, img_points,  A, R_set,  t_set, k, w_h, MAX_ITER);
 
 
@@ -338,11 +342,13 @@ int main(int argc, char **argv)
 	//	cout << R_set[i] << endl;
 	//}
 
-	ceres_nonlinear_op(obj_points, \
+	//ceres_nonlinear_op(obj_points, \
 		img_points, \
-		A, R_set, t_set, k, w_h,
+		A, R_set, t_set, k, w_h,\
 		MAX_ITER);
 	//cout << "k" << k << endl;
+
+
 
 	cout << "mean_Reprojective_Error:" << endl;
 	cout<<computeReprojectionErrors(obj_points,

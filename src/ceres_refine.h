@@ -127,7 +127,7 @@ using ceres::Solve;
 //	const int index_cam_;
 //	const int num_img_;
 //};
-#include <opencv2/core/eigen.hpp>
+//#include <opencv2/core/eigen.hpp>
 
 struct ProjectiveResidual {
 	ProjectiveResidual(double ox, double oy, double ix, double iy,  int index_cam, int num_img)
@@ -383,13 +383,9 @@ private:
 
 
 
-
-
-
-
 int ceres_nonlinear_op(const vector<vector<cv::Point3f>> &obj_points, \
 	const vector<vector<cv::Point2f>> &img_points, \
-	cv::Mat A, vector<cv::Mat> R_set, vector<cv::Mat> t_set, cv::Mat k, vector<pair<int, int>> w_h,
+	cv::Mat &A, vector<cv::Mat> &R_set, vector<cv::Mat> &t_set, cv::Mat &k, vector<pair<int, int>> w_h,
 	int MAX_ITER);
 
 #endif

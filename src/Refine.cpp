@@ -779,12 +779,12 @@ void LM(float(*Funcx)(const cv::Point3f &single_obj_points_every, cv::Mat A, \
 				single_obj_points_every = obj_points[j][kk];
 
 				//º∆À„residual
-				r.at<float>( 2*(kk+j*obj_points[j].size()) ,0) = Funcx(single_obj_points_every, A, \
+				r.at<float>( 2*(kk+j*obj_points[j].size()) ,0) = Func4x(single_obj_points_every, A, \
 					R_set[j], t_set[j], k, w_h[j].first, w_h[j].second) - img_points[j][kk].x;
 
 				mse += r.at<float>(2 * (kk + j * obj_points[j].size()), 0)*r.at<float>(2 * (kk + j * obj_points[j].size()), 0);
 
-				r.at<float>( 2*(kk + j * obj_points[j].size())+1 , 0) = Funcy(single_obj_points_every, A, \
+				r.at<float>( 2*(kk + j * obj_points[j].size())+1 , 0) = Func4y(single_obj_points_every, A, \
 					R_set[j], t_set[j], k, w_h[j].first, w_h[j].second) - img_points[j][kk].y;
 
 				mse += r.at<float>(2 * (kk + j * obj_points[j].size()) + 1, 0)*r.at<float>(2 * (kk + j * obj_points[j].size()) + 1, 0);
@@ -804,9 +804,9 @@ void LM(float(*Funcx)(const cv::Point3f &single_obj_points_every, cv::Mat A, \
 
 
 
-					J.at<float>(2 * (kk + j * obj_points[j].size()), n_index) = Deriv(Funcx, single_obj_points_every,\
+					J.at<float>(2 * (kk + j * obj_points[j].size()), n_index) = Deriv(Func4x, single_obj_points_every,\
 						A, R_set[j], t_set[j], k, w_h[j].first, w_h[j].second, p_J);
-					J.at<float>(2 * (kk + j * obj_points[j].size()) + 1, n_index) = Deriv(Funcy, single_obj_points_every, \
+					J.at<float>(2 * (kk + j * obj_points[j].size()) + 1, n_index) = Deriv(Func4y, single_obj_points_every, \
 						A, R_set[j], t_set[j], k, w_h[j].first, w_h[j].second, p_J);
 
 				}
